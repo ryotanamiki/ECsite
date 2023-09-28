@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fashion ECサイト - 商品一覧</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <header>
+        <h1>商品一覧ページ</h1>
+    </header>
+
+    <main>
+        <section class="product-list">
+            <label for="sort-select">ソート：</label>
+            <select id="sort-select">
+                <option value="price-high">商品価格高い順</option>
+                <option value="price-low">商品価格低い順</option>
+                <option value="name-az">商品名50音</option>
+                <option value="review-rating">レビューの評価順</option>
+                <option value="review-count">レビューの多い順</option>
+            </select>
+        </section>
+        <div class="productsContainer">
+            <% products.forEach(product=> { %>
+                <div class="productBox">
+                    <div class="productsImg"><img src="<%= product.product_imgUrl %>" alt="<%= product.product_name %>">
+                    </div>
+                    <div class="productName">
+                        <%= product.product_name %>
+                    </div>
+                    <div class="productPrice">
+                        <%= product.product_price %> 円
+                    </div>
+                    <div class="rating-stars">
+                        <% for (let i=0; i < product.avg_rating; i++) { %>
+                            <span class="star">★</span>
+                            <% } %>
+                    </div>
+                    <p>レビュー件数 <%= product.review_count %>件</p>
+                </div>
+                <% }); %>
+        </div>
+    </main>
+</body>
+
+</html>
