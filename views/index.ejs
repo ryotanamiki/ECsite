@@ -10,12 +10,12 @@
 
 <body>
     <header>
-        <h1>商品一覧ページ</h1>
+        <h1>ProductsList</h1>
     </header>
 
     <main>
         <section class="product-list">
-            <label for="sort-select">ソート：</label>
+            <label for="sort-select">sort：</label>
             <select id="sort-select" name="sort" onchange="sortProducts(this.value)">
                 <option value=""></option>
                 <option value="price-high">商品価格高い順</option>
@@ -28,10 +28,13 @@
         <div class="productsContainer">
             <% products.forEach(product=> { %>
                 <div class="productBox">
-                    <div class="productsImg"><img src="<%= product.product_imgUrl %>" alt="<%= product.product_name %>">
+                    <div class="productsImg"><a href="/<%= product.product_id %>"><img src="<%= product.product_imgUrl %>"
+                                alt="<%= product.product_name %>"></a>
                     </div>
                     <div class="productName">
-                        <%= product.product_name %>
+                        <a href="/<%= product.product_id %>">
+                            <%= product.product_name %>
+                        </a>
                     </div>
                     <div class="productPrice">
                         <%= product.product_price %> 円

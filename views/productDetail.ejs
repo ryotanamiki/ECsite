@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>ProductDetails</title>
+</head>
+
+<body>
+    <input type="button" class="return" onclick="window.history.back();" value="戻る">
+    <main>
+        <div class="product-details">
+            <div class="product-image">
+                <img src="<%= product.product_imgUrl %>" alt="<%= product.product_name %>">
+            </div>
+            <div class="product-info">
+                <h2>
+                    <%= product.product_name %>
+                </h2>
+                <h3>価格: <%= product.product_price %> 円</h3>
+            </div>
+        </div>
+        <div class="buttonCart">
+            <button id="addToCart">カートへ追加</button>
+        </div>
+
+        <div class="review-sort">
+            <label for="sort-select">レビューをソート：</label>
+            <select id="sort-select" name="sort" onchange="sortReviews(this.value)">
+                <option value="high-rating">評価値高い順</option>
+                <option value="low-rating">評価値低い順</option>
+            </select>
+        </div>
+
+        <div class="reviewsContainer">
+            <% reviews.forEach(review=> { %>
+                <%= review.userId %>
+                    <div class="rating-stars">
+                        評価: <% for (let i=0; i < review.evaluation; i++) { %>
+                            <span class="star">★</span>
+                            <% } %>
+                                <div class="reviewContent">
+                                    <%= review.content %>
+                                </div>
+                    </div>
+                    <% }); %>
+        </div>
+    </main>
+
+    <script>
+        function sortReviews(sortOption) {
+        }
+    </script>
+
+</body>
+
+</html>

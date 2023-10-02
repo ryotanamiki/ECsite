@@ -70,9 +70,55 @@ const sql = `
     });
 });
 
+//商品詳細ページ
 app.get('/:productId', (req, res) => {
     const productId = req.params.productId;
-})
+
+    const productQuery = `
+        SELECT
+            products.id AS product_id,
+            products.name AS product_name,
+            CAST(products.price AS SIGNED) AS product_price,
+            products.imgUrl AS product_imgUrl
+        FROM products
+        WHERE products.id = ?
+    `;
+
+    const reviewQuery = `
+        SELECT
+            reviews.userId,
+            reviews.evaluation,
+            reviews.content
+        FROM reviews
+        WHERE reviews.itemId = ?
+    `;
+
+    con.query(productQuery, [productId], (err, productResult) => {
+        if (err) {
+            console.error('商品情報の取得エラー:', err);
+            res.status(500).send('サーバーエラーが発生しました');
+            return;
+        }
+
+        if (productResult.length === 0) {
+            res.status(404).send('商品が見つかりません');
+            return;
+        }
+
+        con.query(reviewQuery, [productId], (err, reviewResults) => {
+            if (err) {
+                console.error('レビュー情報の取得エラー:', err);
+                res.status(500).send('サーバーエラーが発生しました');
+                return;
+            }
+
+            res.render('productDetail', {
+                product: productResult[0],
+                reviews: reviewResults,
+            });
+        });
+    });
+});
 
 
 app.listen(port, () => {

@@ -22,6 +22,15 @@ header {
     padding: 10px 0;
 }
 
+a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+a:hover {
+    color: #a9a9a9;
+}
 p {
     font-size: 12px;
 }
@@ -36,10 +45,9 @@ main {
     padding: 20px;
 }
 
-td {
-    display: block;
-}
-
+/*-------------------------
+    商品一覧ページ
+-------------------------*/
 .product-list {
     margin-bottom: 3%;
 }
@@ -69,4 +77,27 @@ td {
 
 .productsImg {
     width: 100%;
+}
+/*-------------------------
+    商品詳細ページ
+-------------------------*/
+.return {
+    margin: 1% 1%;
+}
+
+h3 {
+    font-weight: normal;
+}
+
+.reviewsContainer {
+    padding: 1% 0;
+    background-color: #e0e0e0;
+}
+
+button {
+    background-color: rgb(255, 178, 71);
+    margin: 1% 0;
+    padding: 1%;
+    font-weight: bold;
+    border: none;
 }
