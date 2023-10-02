@@ -40,6 +40,9 @@ app.get('/', (req, res) => {
         case 'review-rating':
             orderBy = 'avg_rating DESC';
             break;
+        case 'review-rating-low':
+            orderBy = 'avg_rating ASC';
+            break;
         case 'review-count':
             orderBy = 'review_count DESC';
             break;
@@ -73,6 +76,7 @@ const sql = `
 //商品詳細ページ
 app.get('/:productId', (req, res) => {
     const productId = req.params.productId;
+    const sortOption = req.query.sort;
 
     const productQuery = `
         SELECT
@@ -110,6 +114,11 @@ app.get('/:productId', (req, res) => {
                 console.error('レビュー情報の取得エラー:', err);
                 res.status(500).send('サーバーエラーが発生しました');
                 return;
+            }
+            if (sortOption === 'high-rating') {
+                reviewResults.sort((a, b) => b.evaluation - a.evaluation);
+            } else if (sortOption === 'low-rating') {
+                reviewResults.sort((a, b) => a.evaluation - b.evaluation);
             }
 
             res.render('productDetail', {
