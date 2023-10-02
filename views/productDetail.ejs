@@ -29,6 +29,7 @@
         <div class="review-sort">
             <label for="sort-select">レビューをソート：</label>
             <select id="sort-select" name="sort" onchange="sortReviews(this.value)">
+                <option value=""></option>
                 <option value="high-rating">評価値高い順</option>
                 <option value="low-rating">評価値低い順</option>
             </select>
@@ -50,29 +51,31 @@
     </main>
 
     <script>
-        function sortReviews(sortOption) {
-            document.querySelector('#sort-select').addEventListener('change', function () {
-                const sortOption = this.value;
+    function sortReviews(sortOption) {
+    const reviewsContainer = document.querySelector('.reviewsContainer');
+    const reviews = Array.from(reviewsContainer.querySelectorAll('.rating-stars'));
 
-                const reviewsContainer = document.querySelector('reviewsContainer');
 
-                const reviews = document.querySelector('.rating-stars');
 
-                reviews.sort((a, b) => {
-                    const sortA = parseInt(a.querySelector('.star').length);
-                    const sortB = parseInt(b.querySelector('.star').length);
+    reviews.sort((a, b) => {
+    const evaluationA = parseInt(a.querySelector('.star').textContent.length);
+    const evaluationB = parseInt(b.querySelector('.star').textContent.length);
 
-                    if (sortOption === 'high-rating') {
-                        return sortB - sortA;
-                    } else if (sortOption === 'low-rating') {
-                        return sortA - sortB;
-                    }
-                });
-                reviews.forEach(review => {
-                    reviewsContainer.appendChild(review);
-                })
-            })
-        }
+    if (sortOption === 'high-rating') {
+    return evaluationB - evaluationA;
+} else if (sortOption === 'low-rating') {
+        return evaluationA - evaluationB;
+    } else {
+        return 0;
+    }
+});
+
+    reviewsContainer.innerHTML = '';
+    reviews.forEach(review => {
+        reviewsContainer.appendChild(review);
+});
+}
+
     </script>
 
 </body>
