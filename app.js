@@ -22,20 +22,43 @@ const con = mysql.createConnection({
 // cssファイルの取得
 app.use(express.static('assets'));
 
-//商品ページ
 app.get('/', (req, res) => {
-    const sql = `
+    const sortOption = req.query.sort;
+
+    let orderBy = 'product_price DESC';
+
+    switch (sortOption) {
+        case 'price-high':
+            orderBy = 'product_price DESC';
+            break;
+        case 'price-low':
+            orderBy = 'product_price ASC';
+            break;
+        case 'name-az':
+            orderBy = 'product_name ASC';
+            break;
+        case 'review-rating':
+            orderBy = 'avg_rating DESC';
+            break;
+        case 'review-count':
+            orderBy = 'review_count DESC';
+            break;
+    }
+
+//商品ページ
+const sql = `
     SELECT
-    products.id AS product_id,
-    products.name AS product_name,
-    CAST(products.price AS SIGNED) AS product_price,
-    products.imgUrl AS product_imgUrl,
-    CAST(AVG(reviews.evaluation) AS SIGNED) AS avg_rating,
-    COUNT(reviews.id) AS review_count
-FROM products
-LEFT JOIN reviews ON products.id = reviews.itemId
-GROUP BY products.id, products.name, CAST(products.price AS SIGNED), products.imgUrl
-    `;
+        products.id AS product_id,
+        products.name AS product_name,
+        CAST(products.price AS SIGNED) AS product_price,
+        products.imgUrl AS product_imgUrl,
+        CAST(AVG(reviews.evaluation) AS SIGNED) AS avg_rating,
+        COUNT(reviews.id) AS review_count
+    FROM products
+    LEFT JOIN reviews ON products.id = reviews.itemId
+    GROUP BY products.id, products.name, CAST(products.price AS SIGNED), products.imgUrl
+    ORDER BY ${orderBy}
+`;
 
     con.query(sql, (err, results) => {
         if (err) {
@@ -46,6 +69,10 @@ GROUP BY products.id, products.name, CAST(products.price AS SIGNED), products.im
         res.render('index', { products: results });
     });
 });
+
+app.get('/:productId', (req, res) => {
+    const productId = req.params.productId;
+})
 
 
 app.listen(port, () => {

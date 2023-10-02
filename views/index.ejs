@@ -16,7 +16,8 @@
     <main>
         <section class="product-list">
             <label for="sort-select">ソート：</label>
-            <select id="sort-select">
+            <select id="sort-select" name="sort" onchange="sortProducts(this.value)">
+                <option value=""></option>
                 <option value="price-high">商品価格高い順</option>
                 <option value="price-low">商品価格低い順</option>
                 <option value="name-az">商品名50音</option>
@@ -45,6 +46,16 @@
                 <% }); %>
         </div>
     </main>
+    <script>
+        function sortProducts(sortOption) {
+            const currentUrl = window.location.href;
+            const url = new URL(currentUrl);
+            url.searchParams.set('sort', sortOption);
+
+            window.location.href = url.toString();
+        }
+
+    </script>
 </body>
 
 </html>
