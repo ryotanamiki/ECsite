@@ -59,8 +59,17 @@
                 const reviews = document.querySelector('.rating-stars');
 
                 reviews.sort((a, b) => {
-                    const sortA = parseInt(a.querySelector('star').length);
-                    const sortB = parseInt(b.querySelector('star').length);
+                    const sortA = parseInt(a.querySelector('.star').length);
+                    const sortB = parseInt(b.querySelector('.star').length);
+
+                    if (sortOption === 'high-rating') {
+                        return sortB - sortA;
+                    } else if (sortOption === 'low-rating') {
+                        return sortA - sortB;
+                    }
+                });
+                reviews.forEach(review => {
+                    reviewsContainer.appendChild(review);
                 })
             })
         }

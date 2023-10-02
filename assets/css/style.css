@@ -90,7 +90,7 @@ h3 {
 }
 
 .reviewsContainer {
-    padding: 1% 0;
+    padding: 1% 0 0 0;
     background-color: #e0e0e0;
 }
 
@@ -100,4 +100,7 @@ button {
     padding: 1%;
     font-weight: bold;
     border: none;
+}
+.rating-stars {
+    margin-bottom: 4%;
 }
