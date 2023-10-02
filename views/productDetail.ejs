@@ -29,7 +29,7 @@
         <div class="review-sort">
             <label for="sort-select">レビューをソート：</label>
             <select id="sort-select" name="sort" onchange="sortReviews(this.value)">
-                <option value=""></option>
+                <option value="default"></option>
                 <option value="high-rating">評価値高い順</option>
                 <option value="low-rating">評価値低い順</option>
             </select>
@@ -46,37 +46,23 @@
                                     <%= review.content %>
                                 </div>
                     </div>
-                    <% }); %>
+            <% }); %>
         </div>
     </main>
 
-    <script>
+<script>
     function sortReviews(sortOption) {
-    const reviewsContainer = document.querySelector('.reviewsContainer');
-    const reviews = Array.from(reviewsContainer.querySelectorAll('.rating-stars'));
+        if (sortOption === 'default') {
+            return;
+        }
 
-
-
-    reviews.sort((a, b) => {
-    const evaluationA = parseInt(a.querySelector('.star').textContent.length);
-    const evaluationB = parseInt(b.querySelector('.star').textContent.length);
-
-    if (sortOption === 'high-rating') {
-    return evaluationB - evaluationA;
-} else if (sortOption === 'low-rating') {
-        return evaluationA - evaluationB;
-    } else {
-        return 0;
+        const currentUrl = window.location.href;
+        const url = new URL(currentUrl);
+        url.searchParams.set('sort', sortOption);
+        window.location.href = url.href;
     }
-});
+</script>
 
-    reviewsContainer.innerHTML = '';
-    reviews.forEach(review => {
-        reviewsContainer.appendChild(review);
-});
-}
-
-    </script>
 
 </body>
 
