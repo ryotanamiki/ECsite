@@ -62,3 +62,5 @@ INSERT INTO reviews (itemId, userId, content, evaluation) VALUES
 (9, '加藤雅人', '商品の発送が迅速で、安心しました', 3),
 (10, '小林真理子', '問い合わせへの対応が迅速で、満足しています', 5)
 ;
+INSERT INTO reviews (itemId, userId, content, evaluation) VALUES
+(1, '斎藤忠', '値段の割に記事も良さげした', 3);
