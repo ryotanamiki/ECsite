@@ -29,7 +29,7 @@ a {
 }
 
 a:hover {
-    color: #a9a9a9;
+    text-decoration: underline;
 }
 p {
     font-size: 12px;

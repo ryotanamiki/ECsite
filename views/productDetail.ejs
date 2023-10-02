@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <input type="button" class="return" onclick="window.history.back();" value="戻る">
+    <div class="return"><a href="#" onclick="window.history.back(); return false;">戻る</a></div>
     <main>
         <div class="product-details">
             <div class="product-image">
@@ -51,6 +51,18 @@
 
     <script>
         function sortReviews(sortOption) {
+            document.querySelector('#sort-select').addEventListener('change', function () {
+                const sortOption = this.value;
+
+                const reviewsContainer = document.querySelector('reviewsContainer');
+
+                const reviews = document.querySelector('.rating-stars');
+
+                reviews.sort((a, b) => {
+                    const sortA = parseInt(a.querySelector('star').length);
+                    const sortB = parseInt(b.querySelector('star').length);
+                })
+            })
         }
     </script>
 
