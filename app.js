@@ -4,6 +4,14 @@ const bodyParser = require('body-parser');
 const ejs = require('ejs');
 const app = express();
 const port = 3000;
+const session = require('express-session');
+
+app.use(session({
+    secret: 'secretKey',
+    resave: false,
+    saveUninitialized: true,
+}));
+
 
 app.use(bodyParser.urlencoded({
     extended: true
@@ -73,29 +81,29 @@ const sql = `
     });
 });
 
+const productQuery = `
+    SELECT
+        products.id AS product_id,
+        products.name AS product_name,
+        CAST(products.price AS SIGNED) AS product_price,
+        products.imgUrl AS product_imgUrl
+    FROM products
+    WHERE products.id = ?
+`;
+
+const reviewQuery = `
+    SELECT
+        reviews.userId,
+        reviews.evaluation,
+        reviews.content
+    FROM reviews
+    WHERE reviews.itemId = ?
+`;
 //商品詳細ページ
 app.get('/:productId', (req, res) => {
     const productId = req.params.productId;
     const sortOption = req.query.sort;
 
-    const productQuery = `
-        SELECT
-            products.id AS product_id,
-            products.name AS product_name,
-            CAST(products.price AS SIGNED) AS product_price,
-            products.imgUrl AS product_imgUrl
-        FROM products
-        WHERE products.id = ?
-    `;
-
-    const reviewQuery = `
-        SELECT
-            reviews.userId,
-            reviews.evaluation,
-            reviews.content
-        FROM reviews
-        WHERE reviews.itemId = ?
-    `;
 
     con.query(productQuery, [productId], (err, productResult) => {
         if (err) {
@@ -129,7 +137,67 @@ app.get('/:productId', (req, res) => {
     });
 });
 
+//カートに商品を追加
+const cartItems = [];
+
+// 商品をカートに追加するルート
+app.post('/addToCart', (req, res) => {
+    const productId = req.body.productId;
+
+    const sql = `
+        SELECT
+            products.id AS product_id,
+            products.name AS product_name,
+            CAST(products.price AS SIGNED) AS product_price,
+            products.imgUrl AS product_imgUrl
+        FROM products
+        WHERE products.id = ?
+    `;
+
+    con.query(sql, [productId], (err, productResult) => {
+        if (err) {
+            console.error('商品情報の取得エラー:', err);
+            res.status(500).send('サーバーエラーが発生しました');
+            return;
+        }
+
+        if (productResult.length === 0) {
+            res.status(404).send('商品が見つかりません');
+            return;
+        }
+
+        // カートに商品を追加
+        cartItems.push(productResult[0]);
+
+        // カートページを表示
+        res.render('cart', {
+            cartItems: cartItems,
+            totalAmount: calculateTotalAmount(cartItems),
+        });
+    });
+});
+
+// カートから商品を削除するルート
+app.post('/removeFromCart', (req, res) => {
+    const productId = req.body.productId;
+
+    const updatedCartItems = cartItems.filter(item => item.product_id !== parseInt(productId)); // 商品IDを整数に変換して比較
+
+    res.render('cart', {
+        cartItems: updatedCartItems,
+        totalAmount: calculateTotalAmount(updatedCartItems),
+    });
+});
+
+function calculateTotalAmount(cartItems) {
+    let total = 0;
+    cartItems.forEach(item => {
+        total += item.product_price;
+    });
+    return total;
+}
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
+
