@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>ProductDetails</title>
+</head>
+
+<body>
+    <div class="return"><a href="/">戻る</a></div>
+    <main>
+        <div class="product-details">
+            <div class="product-image">
+                <img src="<%= product.product_imgUrl %>" alt="<%= product.product_name %>">
+            </div>
+            <div class="product-info">
+                <h2>
+                    <%= product.product_name %>
+                </h2>
+                <h3>価格: <%= product.product_price %> 円</h3>
+            </div>
+        </div>
+        <div class="buttonCart">
+            <form method="post" action="/addToCart">
+                <input type="hidden" name="productId" value="<%= product.product_id %>">
+                <button type="submit">カートへ追加</button>
+            </form>
+        </div>
+
+
+        <div class="review-sort">
+            <label for="sort-select">レビューをソート：</label>
+            <select id="sort-select" name="sort" onchange="sortReviews(this.value)">
+                <option value="default">ー</option>
+                <option value="high-rating">評価値高い順</option>
+                <option value="low-rating">評価値低い順</option>
+            </select>
+        </div>
+
+        <div class="reviewsContainer">
+            <% reviews.forEach(review=> { %>
+                <%= review.userId %>
+                    <div class="rating-stars">
+                        評価: <% for (let i=0; i < review.evaluation; i++) { %>
+                            <span class="star">★</span>
+                            <% } %>
+                                <div class="reviewContent">
+                                    <%= review.content %>
+                                </div>
+                    </div>
+            <% }); %>
+        </div>
+    </main>
+
+<script>
+    function sortReviews(sortOption) {
+        if (sortOption === 'default') {
+            return;
+        }
+
+        const currentUrl = window.location.href;
+        const url = new URL(currentUrl);
+        url.searchParams.set('sort', sortOption);
+        window.location.href = url.href;
+    }
+
+    function addToCart(productId, productName, productPrice, productImgUrl) {
+        const cartItem = {
+            productId: productId,
+            productName: productName,
+            productPrice: productPrice,
+            productImgUrl: productImgUrl
+        };
+
+        let cart = [];
+        if (sessionStorage.getItem('cart')) {
+            cart = JSON.parse(sessionStorage.getItem('cart'));
+        }
+
+        cart.push(cartItem);
+
+        sessionStorage.setItem('cart', JSON.stringify(cart));
+
+        window.location.href = '/cart';
+    }
+
+
+</script>
+
+
+</body>
+
+</html>
